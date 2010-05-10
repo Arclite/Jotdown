@@ -43,11 +43,11 @@
 		6C140F371176F39500954D26 /* markdown.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C140F331176F39500954D26 /* markdown.h */; };
 		6C140F381176F39500954D26 /* mkdio.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C140F341176F39500954D26 /* mkdio.h */; };
 		6C140F651176F4E900954D26 /* libmarkdown.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C140ECD1176F1DB00954D26 /* libmarkdown.a */; };
-		6C7826631178164A00C6CFBA /* PreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C7826611178164A00C6CFBA /* PreviewViewController.m */; };
 		6C7826641178164A00C6CFBA /* PreviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C7826621178164A00C6CFBA /* PreviewViewController.xib */; };
 		6C9CF985117859E8004C184E /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C9CF983117859E8004C184E /* icon.png */; };
 		6C9CF986117859E8004C184E /* iconhd.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C9CF984117859E8004C184E /* iconhd.png */; };
 		6CA809641197ECA700891AAC /* NSStringMaxIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA809631197ECA700891AAC /* NSStringMaxIndex.m */; };
+		6CA80A001197F2F200891AAC /* PreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA809FF1197F2F200891AAC /* PreviewViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,13 +102,13 @@
 		6C140F321176F39500954D26 /* cstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cstring.h; sourceTree = "<group>"; };
 		6C140F331176F39500954D26 /* markdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markdown.h; sourceTree = "<group>"; };
 		6C140F341176F39500954D26 /* mkdio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mkdio.h; sourceTree = "<group>"; };
-		6C7826601178164A00C6CFBA /* PreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreviewViewController.h; path = ../PreviewViewController.h; sourceTree = "<group>"; };
-		6C7826611178164A00C6CFBA /* PreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PreviewViewController.m; path = ../PreviewViewController.m; sourceTree = "<group>"; };
 		6C7826621178164A00C6CFBA /* PreviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreviewViewController.xib; sourceTree = "<group>"; };
 		6C9CF983117859E8004C184E /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		6C9CF984117859E8004C184E /* iconhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iconhd.png; sourceTree = "<group>"; };
 		6CA809621197ECA700891AAC /* NSStringMaxIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringMaxIndex.h; sourceTree = "<group>"; };
 		6CA809631197ECA700891AAC /* NSStringMaxIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringMaxIndex.m; sourceTree = "<group>"; };
+		6CA809FE1197F2F200891AAC /* PreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewViewController.h; sourceTree = "<group>"; };
+		6CA809FF1197F2F200891AAC /* PreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewViewController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Jotdown-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Jotdown-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -137,14 +137,14 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				6C7826601178164A00C6CFBA /* PreviewViewController.h */,
-				6C7826611178164A00C6CFBA /* PreviewViewController.m */,
 				1D3623240D0F684500981E51 /* JotdownAppDelegate.h */,
 				1D3623250D0F684500981E51 /* JotdownAppDelegate.m */,
 				28042007108E984D000629CD /* RootViewController.h */,
 				28042008108E984D000629CD /* RootViewController.m */,
 				28042009108E984D000629CD /* DetailViewController.h */,
 				2804200A108E984D000629CD /* DetailViewController.m */,
+				6CA809FE1197F2F200891AAC /* PreviewViewController.h */,
+				6CA809FF1197F2F200891AAC /* PreviewViewController.m */,
 				6CA809621197ECA700891AAC /* NSStringMaxIndex.h */,
 				6CA809631197ECA700891AAC /* NSStringMaxIndex.m */,
 			);
@@ -185,11 +185,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6C9CF983117859E8004C184E /* icon.png */,
-				6C9CF984117859E8004C184E /* iconhd.png */,
-				6C7826621178164A00C6CFBA /* PreviewViewController.xib */,
-				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
-				2804203B108E9BAB000629CD /* DetailView.xib */,
+				6CA80A021197F30E00891AAC /* XIBs */,
+				6CA80A011197F2FB00891AAC /* Images */,
 				8D1107310486CEB800E47090 /* Jotdown-Info.plist */,
 			);
 			name = Resources;
@@ -235,7 +232,26 @@
 				6C140F181176F36B00954D26 /* xml.c */,
 				6C140F191176F36B00954D26 /* xmlpage.c */,
 			);
-			name = libmarkdown;
+			path = libmarkdown;
+			sourceTree = "<group>";
+		};
+		6CA80A011197F2FB00891AAC /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				6C9CF983117859E8004C184E /* icon.png */,
+				6C9CF984117859E8004C184E /* iconhd.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		6CA80A021197F30E00891AAC /* XIBs */ = {
+			isa = PBXGroup;
+			children = (
+				6C7826621178164A00C6CFBA /* PreviewViewController.xib */,
+				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
+				2804203B108E9BAB000629CD /* DetailView.xib */,
+			);
+			path = XIBs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -340,8 +356,8 @@
 				1D3623260D0F684500981E51 /* JotdownAppDelegate.m in Sources */,
 				2804200B108E984D000629CD /* RootViewController.m in Sources */,
 				2804200C108E984D000629CD /* DetailViewController.m in Sources */,
-				6C7826631178164A00C6CFBA /* PreviewViewController.m in Sources */,
 				6CA809641197ECA700891AAC /* NSStringMaxIndex.m in Sources */,
+				6CA80A001197F2F200891AAC /* PreviewViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

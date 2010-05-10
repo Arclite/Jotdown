@@ -1,6 +1,6 @@
 //
 //  main.m
-//  Markdown Editor
+//  Jotdown
 //
 //  Created by Geoff Pado on 4/5/10.
 //  Copyright Cocoatype, LLC 2010. All rights reserved.

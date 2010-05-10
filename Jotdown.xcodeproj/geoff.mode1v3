@@ -229,6 +229,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -256,16 +258,11 @@
 						<key>PBXSmartGroupTreeModuleOutlineStateKey_v7</key>
 						<dict>
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
-							<array>
-								<string>29B97314FDCFA39411CA2CEA</string>
-								<string>080E96DDFE201D6D7F000001</string>
-								<string>1C37FBAC04509CD000000102</string>
-							</array>
+							<array/>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>17</integer>
-									<integer>16</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -288,7 +285,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>429 387 812 671 0 0 1920 1058 </string>
+						<string>428 387 812 671 0 0 1920 1058 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -304,27 +301,19 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>mkdio.h</string>
+								<string>&lt;No Editor&gt;</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
 									<dict>
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
-										<key>PBXProjectModuleLabel</key>
-										<string>mkdio.h</string>
-										<key>_historyCapacity</key>
-										<integer>0</integer>
-										<key>bookmark</key>
-										<string>6CA809F81197F1BA00891AAC</string>
 										<key>history</key>
 										<array>
 											<string>6C140F781176F93A00954D26</string>
 											<string>6C140F7A1176F93A00954D26</string>
 											<string>6C140F7B1176F93A00954D26</string>
 											<string>6C140F8E1176F98700954D26</string>
-											<string>6C140F8F1176F98700954D26</string>
-											<string>6CA809DC1197F11400891AAC</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -338,7 +327,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {604, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>429 387 812 671 0 0 1920 1058 </string>
+								<string>428 387 812 671 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -346,8 +335,6 @@
 							<string>0pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -360,7 +347,7 @@
 								<key>Frame</key>
 								<string>{{0, 5}, {604, 625}}</string>
 								<key>RubberWindowFrame</key>
-								<string>429 387 812 671 0 0 1920 1058 </string>
+								<string>428 387 812 671 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -524,13 +511,13 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>1CD10A99069EF8BA00B06720</string>
 		<string>6CA290ED116A44A1009B750B</string>
 		<string>1C78EAAD065D492600B07095</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>/Users/geoff/Documents/Programming/Jotdown/Jotdown.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>429 387 812 671 0 0 1920 1058 </string>
+	<string>428 387 812 671 0 0 1920 1058 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -744,7 +731,7 @@
 			<key>WindowToolGUID</key>
 			<string>1CD10A99069EF8BA00B06720</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>FirstTimeWindowDisplayed</key>
