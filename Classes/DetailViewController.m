@@ -1,13 +1,16 @@
 //
-//  DetailViewController.m
-//  Markdown Editor
+//	DetailViewController.m
+//	Jotdown
 //
-//  Created by Geoff Pado on 4/5/10.
-//  Copyright Cocoatype, LLC 2010. All rights reserved.
+//	Created by Geoff Pado on 4/5/10.
+//	Copyright Cocoatype, LLC 2010. All rights reserved.
 //
+
+#import "JotdownAppDelegate.h"
 
 #import "DetailViewController.h"
 #import "RootViewController.h"
+#import "PreviewViewController.h"
 
 @interface DetailViewController ()
 @property (nonatomic, retain) UIPopoverController *popoverController;
@@ -16,65 +19,102 @@
 
 @implementation DetailViewController
 
-@synthesize toolbar, popoverController, detailItem, detailDescriptionLabel;
+@synthesize toolbar;
+@synthesize popoverController;
+@synthesize filePath;
+@synthesize titleLabel;
 
 #pragma mark -
 #pragma mark Managing the detail item
 
-/*
- When setting the detail item, update the view and dismiss the popover controller if it's showing.
- */
-- (void)setDetailItem:(id)newDetailItem {
-    if (detailItem != newDetailItem) {
-        [detailItem release];
-        detailItem = [newDetailItem retain];
-        
-        // Update the view.
-        [self configureView];
-    }
+- (void)setFilePath:(id)newFilePath
+{
+	if (filePath != newFilePath) {
+		[self saveFile];
+		
+		[filePath release];
+		filePath = [newFilePath retain];
 
-    if (popoverController != nil) {
-        [popoverController dismissPopoverAnimated:YES];
-    }        
+		[self configureView];
+	}
+
+	if (popoverController != nil) {
+		[popoverController dismissPopoverAnimated:YES];
+	}
 }
 
-- (void)configureView {
-    // Update the user interface for the detail item.
-    detailDescriptionLabel.text = [detailItem description];   
+- (void)saveFile
+{
+	[[textView text] writeToFile:[self filePath] atomically:YES encoding:[NSString defaultCStringEncoding] error:nil];
+}
+
+- (void)createNewFile
+{
+	NSString *newFileName = [[[NSProcessInfo processInfo] globallyUniqueString] stringByAppendingPathExtension:@"mdown"];
+	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	[[NSString stringWithString:@""] writeToFile:[documentsDirectory stringByAppendingPathComponent:newFileName] atomically:YES encoding:[NSString defaultCStringEncoding] error:nil];
+	
+	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] reloadTitles];
+}
+
+- (void)configureView
+{
+	[textView setText:[NSString stringWithContentsOfFile:[self filePath] encoding:[NSString defaultCStringEncoding] error:nil]];
 }
 
 #pragma mark -
 #pragma mark Split view support
 
-- (void)splitViewController: (UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController: (UIPopoverController*)pc {
-    
-    barButtonItem.title = @"Notes";
-    NSMutableArray *items = [[toolbar items] mutableCopy];
-    [items insertObject:barButtonItem atIndex:0];
-    [toolbar setItems:items animated:YES];
-    [items release];
-    self.popoverController = pc;
+- (void)splitViewController: (UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController: (UIPopoverController*)pc
+{
+	[barButtonItem setTitle:@"Notes"];
+	NSMutableArray *items = [[toolbar items] mutableCopy];
+	[items insertObject:barButtonItem atIndex:0];
+	[toolbar setItems:items animated:YES];
+	[items release];
+	[self setPopoverController:pc];
 }
 
-// Called when the view is shown again in the split view, invalidating the button and popover controller.
-- (void)splitViewController: (UISplitViewController*)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
-    
-    NSMutableArray *items = [[toolbar items] mutableCopy];
-    [items removeObjectAtIndex:0];
-    [toolbar setItems:items animated:YES];
-    [items release];
-    self.popoverController = nil;
+- (void)splitViewController: (UISplitViewController*)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
+{
+	NSMutableArray *items = [[toolbar items] mutableCopy];
+	[items removeObjectAtIndex:0];
+	[toolbar setItems:items animated:YES];
+	[items release];
+	[self setPopoverController:nil];
 }
 
 #pragma mark -
-#pragma mark Markdown support
+#pragma mark Action sheet
 
-- (IBAction)previewHTML:(id)sender
+- (IBAction)showActionSheet:(id)sender
 {
+	if (!actionSheet || ![actionSheet isVisible]) {
+		actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Preview", @"Export HTML", nil];
+		[actionSheet showFromBarButtonItem:sender animated:YES];
+	}
+
+	else {
+		[actionSheet dismissWithClickedButtonIndex:[actionSheet cancelButtonIndex] animated:YES];
+	}
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex == 0)
+		[self previewHTML];
+	else if (buttonIndex == 1)
+		[self exportHTML];
+}
+
+- (void)previewHTML
+{
+	[textView resignFirstResponder];
+	
 	NSString *text = [textView text];
 	char *rawString = (char *)[text cStringUsingEncoding:[NSString defaultCStringEncoding]];
 	
-	NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	NSString *documentsPath = NSTemporaryDirectory();
 	NSString *previewPath = [documentsPath stringByAppendingPathComponent:@"preview.html"];
 	
 	MMIOT *markdownDoc = mkd_string(rawString, strlen(rawString), 0);
@@ -82,73 +122,128 @@
 	markdown(markdownDoc, previewFile, 0);
 	fclose(previewFile);
 	
-	NSLog(@"raw: %@", text);
+	PreviewViewController *previewController = [[PreviewViewController alloc] initWithNibName:@"PreviewViewController" bundle:nil];
+	[previewController setModalPresentationStyle:UIModalPresentationPageSheet];
+	[[self splitViewController] presentModalViewController:previewController animated:YES];
+	
+	[previewController release];
+}
+
+- (void)exportHTML
+{
+	NSString *text = [textView text];
+	char *rawString = (char *)[text cStringUsingEncoding:[NSString defaultCStringEncoding]];
+	
+	NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	NSString *exportPath = [documentsPath stringByAppendingPathComponent:[[self title] stringByAppendingPathExtension:@"html"]];
+	
+	MMIOT *markdownDoc = mkd_string(rawString, strlen(rawString), 0);
+	FILE *exportFile = fopen([exportPath cStringUsingEncoding:[NSString defaultCStringEncoding]], "w");
+	markdown(markdownDoc, exportFile, 0);
+	fclose(exportFile);
+	
+	UIAlertView *exportCompletedView = [[UIAlertView alloc] initWithTitle:@"Export completed." message:@"Your export completed successfully. You can find it in the \"Apps\" tab of iTunes when you sync your iPad." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+	[exportCompletedView show];
+	
+	[exportCompletedView release];
+}
+
+- (void)exportMarkdown
+{
+	NSString *text = [textView text];
+	
+	NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	NSString *exportPath = [documentsPath stringByAppendingPathComponent:[[self title] stringByAppendingPathExtension:@"txt"]];
+	
+	[text writeToFile:exportPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+	
+	UIAlertView *exportCompletedView = [[UIAlertView alloc] initWithTitle:@"Export completed." message:@"Your export completed successfully. You can find it in the \"Apps\" tab of iTunes when you sync your iPad." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+	[exportCompletedView show];
+	
+	[exportCompletedView release];
+}
+
+- (IBAction)newFile:(id)sender
+{
+	[self createNewFile];
+}
+
+#pragma mark -
+#pragma mark Text support
+
+- (NSString *)title
+{
+	NSString *text = [textView text];
+	NSString *title = [[text componentsSeparatedByString:@"\n"] objectAtIndex:0];
+	title = [title substringToMaxIndex:35];
+	
+	if ([title isEqualToString:@""])
+		title = [NSString stringWithFormat:@"Untitled"];
+	
+	return title;
+}
+
+- (void)receivedKeyboardNotification:(NSNotification *)notification
+{
+	if ([[notification name] isEqualToString:UIKeyboardWillShowNotification]) {
+		[UIView beginAnimations:@"keyboardShowAnimation" context:nil];
+		[UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
+		[UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+		
+		CGRect textViewFrame = [textView frame];
+		CGRect keyboardFrame = [[self view] convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
+		[textView setFrame:CGRectMake(textViewFrame.origin.x, textViewFrame.origin.y, textViewFrame.size.width, textViewFrame.size.height - keyboardFrame.size.height)];
+		
+		[UIView commitAnimations];
+	}
+	
+	else if ([[notification name] isEqualToString:UIKeyboardWillHideNotification]) {
+		[UIView beginAnimations:@"keyboardHideAnimation" context:nil];
+		[UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
+		[UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+
+		CGRect textViewFrame = [textView frame];
+		CGRect keyboardFrame = [[self view] convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:nil];
+		[textView setFrame:CGRectMake(textViewFrame.origin.x, textViewFrame.origin.y, textViewFrame.size.width, textViewFrame.size.height + keyboardFrame.size.height)];
+
+		[UIView commitAnimations];
+	}
 }
 
 #pragma mark -
 #pragma mark Rotation support
 
-// Ensure that the view controller supports rotation and that the split view can therefore show in both portrait and landscape.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return YES;
 }
 
 #pragma mark -
 #pragma mark View lifecycle
 
-/*
- // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)viewDidLoad
+{
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedKeyboardNotification:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedKeyboardNotification:) name:UIKeyboardWillHideNotification object:nil];
 }
- */
 
-/*
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-*/
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
-
-- (void)viewDidUnload {
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    self.popoverController = nil;
+- (void)viewDidUnload
+{
+	[self setPopoverController:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark -
 #pragma mark Memory management
 
-/*
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-*/
-
-- (void)dealloc {
-    [popoverController release];
-    [toolbar release];
-    
-    [detailItem release];
-    [detailDescriptionLabel release];
-    [super dealloc];
+- (void)dealloc
+{
+	[popoverController release];
+	[toolbar release];
+	
+	[filePath release];
+	[titleLabel release];
+	[super dealloc];
 }
 
 @end

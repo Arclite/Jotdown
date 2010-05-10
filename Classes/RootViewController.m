@@ -1,158 +1,109 @@
 //
-//  RootViewController.m
-//  Markdown Editor
+//	RootViewController.m
+//	Jotdown
 //
-//  Created by Geoff Pado on 4/5/10.
-//  Copyright Cocoatype, LLC 2010. All rights reserved.
+//	Created by Geoff Pado on 4/5/10.
+//	Copyright Cocoatype, LLC 2010. All rights reserved.
 //
 
 #import "RootViewController.h"
 #import "DetailViewController.h"
 
-#include "mkdio.h"
-
 @implementation RootViewController
 
 @synthesize detailViewController;
 
-#pragma mark -
-#pragma mark View lifecycle
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	[self setClearsSelectionOnViewWillAppear:NO];
+	[self setContentSizeForViewInPopover:CGSizeMake(320.0f, 600.0f)];
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.clearsSelectionOnViewWillAppear = NO;
-    self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+	[self loadDocumentTitles];
 }
 
-/*
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-*/
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
-
-// Ensure that the view controller supports rotation and that the split view can therefore show in both portrait and landscape.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	[[self tableView] selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+	[detailViewController setFilePath:[documentPaths objectAtIndex:0]];
 }
 
-#pragma mark -
-#pragma mark Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView {
-    // Return the number of sections.
-    return 1;
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return YES;
 }
 
-- (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
-    return 10;
+- (void)loadDocumentTitles
+{
+	documentTitles = nil, documentPaths = nil;
+	documentTitles = [[NSMutableArray alloc] init];
+	documentPaths = [[NSMutableArray alloc] init];
+	
+	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	NSDirectoryEnumerator *documentsEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:documentsDirectory];
+	NSString *filePath, *fileContents;
+
+	while (filePath = [documentsEnumerator nextObject]) {
+		if ([[filePath pathExtension] isEqualToString:@"mdown"]) {
+			fileContents = [NSString stringWithContentsOfFile:filePath encoding:[NSString defaultCStringEncoding] error:nil];
+			
+			if ([[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35] == nil)
+				[documentTitles addObject:[NSString stringWithString:@"Untitled"]];
+			else
+				[documentTitles addObject:[[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35]];
+
+			[documentPaths addObject:filePath];
+		}
+	}
+	
+	if ([documentPaths count] == 0)
+		[detailViewController createNewFile];
+	
+	[[self tableView] reloadData];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *CellIdentifier = @"CellIdentifier";
-    
-    // Dequeue or create a cell of the appropriate type.
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    }
-    
-    // Configure the cell.
-    cell.textLabel.text = [NSString stringWithFormat:@"Row %d", indexPath.row];
-    return cell;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView
+{
+	return 1;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
-#pragma mark -
-#pragma mark Table view delegate
-
-- (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    /*
-     When a row is selected, set the detail view controller's detail item to the item associated with the selected row.
-     */
-    detailViewController.detailItem = [NSString stringWithFormat:@"Row %d", indexPath.row];
+- (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section
+{
+	return [documentTitles count];
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	static NSString *CellIdentifier = @"CellIdentifier";
 
-#pragma mark -
-#pragma mark Memory management
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	if (cell == nil) {
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+		[cell setAccessoryType:UITableViewCellAccessoryNone];
+	}
 
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Relinquish ownership any cached data, images, etc. that aren't in use.
+	[[cell textLabel] setText:[documentTitles objectAtIndex:indexPath.row]];
+	return cell;
 }
 
-- (void)viewDidUnload {
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
+- (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	[detailViewController setFilePath:[documentPaths objectAtIndex:indexPath.row]];
 }
 
-
-- (void)dealloc {
-    [detailViewController release];
-    [super dealloc];
+- (void)didReceiveMemoryWarning
+{
+	[super didReceiveMemoryWarning];
 }
 
+- (void)dealloc
+{
+	[detailViewController release];
+	[documentPaths release];
+	[documentTitles release];
+
+	[super dealloc];
+}
 
 @end
-
