@@ -19,6 +19,6 @@ Feature List
 
 License
 -------
-BSD: http://www.opensource.org/licenses/bsd-license.php
+[BSD License](http://www.opensource.org/licenses/bsd-license.php)
 
-Jotdown is based on the C library "Discount", which also uses the BSD license: http://www.pell.portland.or.us/~orc/Code/discount/. For some reason, I called it "libmarkdown" in the source.
+Jotdown is based on the C library "[Discount](http://www.pell.portland.or.us/~orc/Code/discount/)", which also uses the BSD license. For some reason, I called it "libmarkdown" in the source.
