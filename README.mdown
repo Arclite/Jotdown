@@ -1,0 +1,23 @@
+Jotdown
+=======
+
+Jotdown is a Markdown editor for the Apple iPad. Working on it, what little I can.
+
+Known bugs
+----------
+- Saving is all wonky.
+- Like, *really* wonky.
+- Files are named with GUIDs, and that looks weird.
+- Files are listed according to said GUIDs, so there's no ascertainable order to the file listing.
+- The UI doesn't update as much as I'd like.
+
+Feature List
+------------
+- More keyboard support
+- Markdown syntax page
+- Export to PDF
+
+License
+-------
+BSD: http://www.opensource.org/licenses/bsd-license.php
+Jotdown is based on the C library "Discount", which also uses the BSD license: http://www.pell.portland.or.us/~orc/Code/discount/. For some reason, I called it "libmarkdown" in the source.
