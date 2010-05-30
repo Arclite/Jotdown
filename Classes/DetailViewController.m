@@ -29,12 +29,17 @@
 
 - (void)setFilePath:(id)newFilePath
 {
-	if (filePath != newFilePath) {
+	if (filePath != newFilePath && filePath != nil) {
 		[self saveFile];
 
 		[filePath release];
 		filePath = [newFilePath retain];
 
+		[self configureView];
+	}
+	
+	else if (filePath == nil) {
+		filePath = [newFilePath retain];
 		[self configureView];
 	}
 
@@ -46,6 +51,26 @@
 - (void)saveFile
 {
 	[[textView text] writeToFile:[self filePath] atomically:YES encoding:[NSString defaultCStringEncoding] error:nil];
+
+	//open index
+	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];	
+	NSString *indexPath = [documentsDirectory stringByAppendingPathComponent:@".index"];
+	
+	//get index data
+	NSMutableArray *indexArray = [[NSMutableArray alloc] initWithContentsOfFile:indexPath];
+	NSInteger saveIndex = [indexArray indexOfObjectIdenticalTo:[[indexArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"path==%@", [self filePath]]] objectAtIndex:0]];
+	NSMutableDictionary *indexDictionary = [NSMutableDictionary dictionaryWithDictionary:[indexArray objectAtIndex:saveIndex]];
+
+	//update title
+	NSString *candidateTitle = [[[[textView text] componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35];
+	if (candidateTitle == nil || [candidateTitle isEqualToString:@""])
+		[indexDictionary setObject:@"Untitled" forKey:@"title"];
+	else
+		[indexDictionary setObject:candidateTitle forKey:@"title"];
+	
+	//write to index
+	[indexArray replaceObjectAtIndex:saveIndex withObject:indexDictionary];
+	[indexArray writeToFile:indexPath atomically:YES];
 }
 
 - (void)createNewFile
@@ -57,6 +82,16 @@
 
 	[[NSString stringWithString:@""] writeToFile:newFilePath atomically:YES encoding:[NSString defaultCStringEncoding] error:nil];
 
+	//add file to the index
+	NSString *indexPath = [documentsDirectory stringByAppendingPathComponent:@".index"];
+	if ([[NSFileManager defaultManager] fileExistsAtPath:indexPath] == NO)
+		[[NSArray new] writeToFile:indexPath atomically:YES];
+	
+	NSMutableArray *indexArray = [[NSMutableArray alloc] initWithContentsOfFile:indexPath];
+	[indexArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:newFilePath, @"path", [NSDate date], @"creationDate", @"Untitled", @"title", nil]];
+	
+	[indexArray writeToFile:indexPath atomically:YES];
+	
 	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] reloadTitles];
 }
 

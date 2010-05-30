@@ -36,29 +36,15 @@
 
 - (void)loadDocumentTitles
 {
-	documentPaths = [[NSMutableArray alloc] init];
-
 	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSDirectoryEnumerator *documentsEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:documentsDirectory];
-	NSString *filePath, *fileContents, *fileTitle;
-
-	while (filePath = [documentsEnumerator nextObject]) {
-		if ([[filePath pathExtension] isEqualToString:@"mdown"]) {
-			filePath = [documentsDirectory stringByAppendingPathComponent:filePath];
-			fileContents = [NSString stringWithContentsOfFile:filePath encoding:[NSString defaultCStringEncoding] error:nil];
-
-			if (([[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35] == nil) || ([[[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35] isEqualToString: @""]))
-				fileTitle = [NSString stringWithString:@"Untitled"];
-			else
-				fileTitle = [[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35];
-
-			[documentPaths addObject:[NSDictionary dictionaryWithObjectsAndKeys:filePath, @"path", fileTitle, @"title", nil]];
-		}
-	}
+	NSString *indexPath = [documentsDirectory stringByAppendingPathComponent:@".index"];
+	documentPaths = [[NSArray alloc] initWithContentsOfFile:indexPath];
 
 	if ([documentPaths count] == 0)
 		[detailViewController createNewFile];
-	
+	else
+		[documentPaths sortUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:NO]]];
+
 	[[self tableView] reloadData];
 }
 
