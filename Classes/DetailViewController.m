@@ -31,7 +31,7 @@
 {
 	if (filePath != newFilePath) {
 		[self saveFile];
-		
+
 		[filePath release];
 		filePath = [newFilePath retain];
 
@@ -51,9 +51,12 @@
 - (void)createNewFile
 {
 	NSString *newFileName = [[[NSProcessInfo processInfo] globallyUniqueString] stringByAppendingPathExtension:@"mdown"];
+	newFileName = [[NSString stringWithString:@"."] stringByAppendingString:newFileName];
 	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	[[NSString stringWithString:@""] writeToFile:[documentsDirectory stringByAppendingPathComponent:newFileName] atomically:YES encoding:[NSString defaultCStringEncoding] error:nil];
-	
+	NSString *newFilePath = [documentsDirectory stringByAppendingPathComponent:newFileName];
+
+	[[NSString stringWithString:@""] writeToFile:newFilePath atomically:YES encoding:[NSString defaultCStringEncoding] error:nil];
+
 	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] reloadTitles];
 }
 
@@ -110,22 +113,22 @@
 - (void)previewHTML
 {
 	[textView resignFirstResponder];
-	
+
 	NSString *text = [textView text];
 	char *rawString = (char *)[text cStringUsingEncoding:[NSString defaultCStringEncoding]];
-	
+
 	NSString *documentsPath = NSTemporaryDirectory();
 	NSString *previewPath = [documentsPath stringByAppendingPathComponent:@"preview.html"];
-	
+
 	MMIOT *markdownDoc = mkd_string(rawString, strlen(rawString), 0);
 	FILE *previewFile = fopen([previewPath cStringUsingEncoding:[NSString defaultCStringEncoding]], "w");
 	markdown(markdownDoc, previewFile, 0);
 	fclose(previewFile);
-	
+
 	PreviewViewController *previewController = [[PreviewViewController alloc] initWithNibName:@"PreviewViewController" bundle:nil];
 	[previewController setModalPresentationStyle:UIModalPresentationPageSheet];
 	[[self splitViewController] presentModalViewController:previewController animated:YES];
-	
+
 	[previewController release];
 }
 
@@ -133,33 +136,33 @@
 {
 	NSString *text = [textView text];
 	char *rawString = (char *)[text cStringUsingEncoding:[NSString defaultCStringEncoding]];
-	
+
 	NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	NSString *exportPath = [documentsPath stringByAppendingPathComponent:[[self title] stringByAppendingPathExtension:@"html"]];
-	
+
 	MMIOT *markdownDoc = mkd_string(rawString, strlen(rawString), 0);
 	FILE *exportFile = fopen([exportPath cStringUsingEncoding:[NSString defaultCStringEncoding]], "w");
 	markdown(markdownDoc, exportFile, 0);
 	fclose(exportFile);
-	
+
 	UIAlertView *exportCompletedView = [[UIAlertView alloc] initWithTitle:@"Export completed." message:@"Your export completed successfully. You can find it in the \"Apps\" tab of iTunes when you sync your iPad." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
 	[exportCompletedView show];
-	
+
 	[exportCompletedView release];
 }
 
 - (void)exportMarkdown
 {
 	NSString *text = [textView text];
-	
+
 	NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	NSString *exportPath = [documentsPath stringByAppendingPathComponent:[[self title] stringByAppendingPathExtension:@"txt"]];
-	
+
 	[text writeToFile:exportPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-	
+
 	UIAlertView *exportCompletedView = [[UIAlertView alloc] initWithTitle:@"Export completed." message:@"Your export completed successfully. You can find it in the \"Apps\" tab of iTunes when you sync your iPad." delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
 	[exportCompletedView show];
-	
+
 	[exportCompletedView release];
 }
 
@@ -176,10 +179,10 @@
 	NSString *text = [textView text];
 	NSString *title = [[text componentsSeparatedByString:@"\n"] objectAtIndex:0];
 	title = [title substringToMaxIndex:35];
-	
+
 	if ([title isEqualToString:@""])
 		title = [NSString stringWithFormat:@"Untitled"];
-	
+
 	return title;
 }
 
@@ -189,14 +192,14 @@
 		[UIView beginAnimations:@"keyboardShowAnimation" context:nil];
 		[UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
 		[UIView setAnimationDuration:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
-		
+
 		CGRect textViewFrame = [textView frame];
 		CGRect keyboardFrame = [[self view] convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue] fromView:nil];
 		[textView setFrame:CGRectMake(textViewFrame.origin.x, textViewFrame.origin.y, textViewFrame.size.width, textViewFrame.size.height - keyboardFrame.size.height)];
-		
+
 		[UIView commitAnimations];
 	}
-	
+
 	else if ([[notification name] isEqualToString:UIKeyboardWillHideNotification]) {
 		[UIView beginAnimations:@"keyboardHideAnimation" context:nil];
 		[UIView setAnimationCurve:[[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]];
@@ -240,7 +243,7 @@
 {
 	[popoverController release];
 	[toolbar release];
-	
+
 	[filePath release];
 	[titleLabel release];
 	[super dealloc];

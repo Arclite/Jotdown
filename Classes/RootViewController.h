@@ -13,7 +13,6 @@
 @interface RootViewController : UITableViewController
 {
     DetailViewController *detailViewController;
-	NSMutableArray *documentTitles;
 	NSMutableArray *documentPaths;
 }
 

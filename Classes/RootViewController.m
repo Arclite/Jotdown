@@ -26,7 +26,7 @@
 {
 	[super viewWillAppear:animated];
 	[[self tableView] selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-	[detailViewController setFilePath:[documentPaths objectAtIndex:0]];
+	[detailViewController setFilePath:[[documentPaths objectAtIndex:0] objectForKey:@"path"]];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -36,27 +36,26 @@
 
 - (void)loadDocumentTitles
 {
-	documentTitles = nil, documentPaths = nil;
-	documentTitles = [[NSMutableArray alloc] init];
 	documentPaths = [[NSMutableArray alloc] init];
-	
+
 	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	NSDirectoryEnumerator *documentsEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:documentsDirectory];
-	NSString *filePath, *fileContents;
+	NSString *filePath, *fileContents, *fileTitle;
 
 	while (filePath = [documentsEnumerator nextObject]) {
 		if ([[filePath pathExtension] isEqualToString:@"mdown"]) {
+			filePath = [documentsDirectory stringByAppendingPathComponent:filePath];
 			fileContents = [NSString stringWithContentsOfFile:filePath encoding:[NSString defaultCStringEncoding] error:nil];
-			
-			if ([[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35] == nil)
-				[documentTitles addObject:[NSString stringWithString:@"Untitled"]];
-			else
-				[documentTitles addObject:[[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35]];
 
-			[documentPaths addObject:filePath];
+			if (([[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35] == nil) || ([[[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35] isEqualToString: @""]))
+				fileTitle = [NSString stringWithString:@"Untitled"];
+			else
+				fileTitle = [[[fileContents componentsSeparatedByString:@"\n"] objectAtIndex:0] substringToMaxIndex:35];
+
+			[documentPaths addObject:[NSDictionary dictionaryWithObjectsAndKeys:filePath, @"path", fileTitle, @"title", nil]];
 		}
 	}
-	
+
 	if ([documentPaths count] == 0)
 		[detailViewController createNewFile];
 	
@@ -70,7 +69,7 @@
 
 - (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section
 {
-	return [documentTitles count];
+	return [documentPaths count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -83,13 +82,13 @@
 		[cell setAccessoryType:UITableViewCellAccessoryNone];
 	}
 
-	[[cell textLabel] setText:[documentTitles objectAtIndex:indexPath.row]];
+	[[cell textLabel] setText:[[documentPaths objectAtIndex:indexPath.row] objectForKey:@"title"]];
 	return cell;
 }
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[detailViewController setFilePath:[documentPaths objectAtIndex:indexPath.row]];
+	[detailViewController setFilePath:[[documentPaths objectAtIndex:indexPath.row] objectForKey:@"path"]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -101,7 +100,6 @@
 {
 	[detailViewController release];
 	[documentPaths release];
-	[documentTitles release];
 
 	[super dealloc];
 }
