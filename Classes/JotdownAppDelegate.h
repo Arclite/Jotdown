@@ -12,11 +12,11 @@
 #import "DetailViewController.h";
 
 @interface JotdownAppDelegate : NSObject <UIApplicationDelegate>
-{	 
+{
 	UIWindow *window;
-	
+
 	UISplitViewController *splitViewController;
-	
+
 	RootViewController *rootViewController;
 	DetailViewController *detailViewController;
 }

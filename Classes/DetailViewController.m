@@ -37,7 +37,7 @@
 
 		[self configureView];
 	}
-	
+
 	else if (filePath == nil) {
 		filePath = [newFilePath retain];
 		[self configureView];
@@ -53,9 +53,9 @@
 	[[textView text] writeToFile:[self filePath] atomically:YES encoding:[NSString defaultCStringEncoding] error:nil];
 
 	//open index
-	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];	
+	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	NSString *indexPath = [documentsDirectory stringByAppendingPathComponent:@".index"];
-	
+
 	//get index data
 	NSMutableArray *indexArray = [[NSMutableArray alloc] initWithContentsOfFile:indexPath];
 	NSInteger saveIndex = [indexArray indexOfObjectIdenticalTo:[[indexArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"path==%@", [self filePath]]] objectAtIndex:0]];
@@ -67,7 +67,7 @@
 		[indexDictionary setObject:@"Untitled" forKey:@"title"];
 	else
 		[indexDictionary setObject:candidateTitle forKey:@"title"];
-	
+
 	//write to index
 	[indexArray replaceObjectAtIndex:saveIndex withObject:indexDictionary];
 	[indexArray writeToFile:indexPath atomically:YES];
@@ -86,12 +86,12 @@
 	NSString *indexPath = [documentsDirectory stringByAppendingPathComponent:@".index"];
 	if ([[NSFileManager defaultManager] fileExistsAtPath:indexPath] == NO)
 		[[NSArray new] writeToFile:indexPath atomically:YES];
-	
+
 	NSMutableArray *indexArray = [[NSMutableArray alloc] initWithContentsOfFile:indexPath];
 	[indexArray addObject:[[NSDictionary alloc] initWithObjectsAndKeys:newFilePath, @"path", [NSDate date], @"creationDate", @"Untitled", @"title", nil]];
-	
+
 	[indexArray writeToFile:indexPath atomically:YES];
-	
+
 	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] reloadTitles];
 }
 
@@ -128,7 +128,7 @@
 - (IBAction)showActionSheet:(id)sender
 {
 	if (!actionSheet || ![actionSheet isVisible]) {
-		actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Preview", @"Export HTML", nil];
+		actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Preview", @"Export HTML", @"Export Markdown", nil];
 		[actionSheet showFromBarButtonItem:sender animated:YES];
 	}
 
@@ -139,10 +139,12 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	if (buttonIndex == 0)
+	if (buttonIndex == kJDExportPreview)
 		[self previewHTML];
-	else if (buttonIndex == 1)
+	else if (buttonIndex == kJDExportHTML)
 		[self exportHTML];
+	else if (buttonIndex == kJDExportMarkdown)
+		[self exportMarkdown];
 }
 
 - (void)previewHTML
@@ -191,7 +193,7 @@
 	NSString *text = [textView text];
 
 	NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *exportPath = [documentsPath stringByAppendingPathComponent:[[self title] stringByAppendingPathExtension:@"txt"]];
+	NSString *exportPath = [documentsPath stringByAppendingPathComponent:[[self title] stringByAppendingPathExtension:@"mdown"]];
 
 	[text writeToFile:exportPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 

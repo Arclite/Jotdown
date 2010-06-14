@@ -9,16 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "mkdio.h"
 
+typedef enum _JDExportAction {
+	kJDExportPreview,
+	kJDExportHTML,
+	kJDExportMarkdown
+} JDExportAction;
+
 @interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, UIActionSheetDelegate>
-{    
+{
     UIPopoverController *popoverController;
     UIToolbar *toolbar;
-	
+
 	IBOutlet UITextView *textView;
-    
+
     NSString *filePath;
     UILabel *titleLabel;
-	
+
 	UIActionSheet *actionSheet;
 }
 
