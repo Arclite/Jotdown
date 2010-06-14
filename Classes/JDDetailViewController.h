@@ -1,5 +1,5 @@
 //
-//  DetailViewController.h
+//  JDDetailViewController.h
 //  Jotdown
 //
 //  Created by Geoff Pado on 4/5/10.
@@ -15,7 +15,7 @@ typedef enum _JDExportAction {
 	kJDExportMarkdown
 } JDExportAction;
 
-@interface DetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, UIActionSheetDelegate>
+@interface JDDetailViewController : UIViewController <UIPopoverControllerDelegate, UISplitViewControllerDelegate, UIActionSheetDelegate>
 {
     UIPopoverController *popoverController;
     UIToolbar *toolbar;

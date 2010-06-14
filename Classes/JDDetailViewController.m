@@ -1,5 +1,5 @@
 //
-//	DetailViewController.m
+//	JDDetailViewController.m
 //	Jotdown
 //
 //	Created by Geoff Pado on 4/5/10.
@@ -8,16 +8,16 @@
 
 #import "JotdownAppDelegate.h"
 
-#import "DetailViewController.h"
-#import "RootViewController.h"
-#import "PreviewViewController.h"
+#import "JDDetailViewController.h"
+#import "JDFilesViewController.h"
+#import "JDPreviewViewController.h"
 
-@interface DetailViewController ()
+@interface JDDetailViewController ()
 @property (nonatomic, retain) UIPopoverController *popoverController;
 - (void)configureView;
 @end
 
-@implementation DetailViewController
+@implementation JDDetailViewController
 
 @synthesize toolbar;
 @synthesize popoverController;
@@ -162,7 +162,7 @@
 	markdown(markdownDoc, previewFile, 0);
 	fclose(previewFile);
 
-	PreviewViewController *previewController = [[PreviewViewController alloc] initWithNibName:@"PreviewViewController" bundle:nil];
+	JDPreviewViewController *previewController = [[JDPreviewViewController alloc] initWithNibName:@"PreviewViewController" bundle:nil];
 	[previewController setModalPresentationStyle:UIModalPresentationPageSheet];
 	[[self splitViewController] presentModalViewController:previewController animated:YES];
 

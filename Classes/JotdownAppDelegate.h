@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "RootViewController.h";
-#import "DetailViewController.h";
+#import "JDFilesViewController.h";
+#import "JDDetailViewController.h";
 
 @interface JotdownAppDelegate : NSObject <UIApplicationDelegate>
 {
@@ -17,14 +17,14 @@
 
 	UISplitViewController *splitViewController;
 
-	RootViewController *rootViewController;
-	DetailViewController *detailViewController;
+	JDFilesViewController *rootViewController;
+	JDDetailViewController *detailViewController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UISplitViewController *splitViewController;
-@property (nonatomic, retain) IBOutlet RootViewController *rootViewController;
-@property (nonatomic, retain) IBOutlet DetailViewController *detailViewController;
+@property (nonatomic, retain) IBOutlet JDFilesViewController *rootViewController;
+@property (nonatomic, retain) IBOutlet JDDetailViewController *detailViewController;
 
 - (void)reloadTitles;
 - (void)exportMarkdown;

@@ -1,5 +1,5 @@
 //
-//  PreviewViewController.h
+//  JDPreviewViewController.h
 //  Jotdown
 //
 //  Created by Geoff Pado on 4/15/10.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PreviewViewController : UIViewController
+@interface JDPreviewViewController : UIViewController
 {
 	IBOutlet UIWebView *webView;
 }

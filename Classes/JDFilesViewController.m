@@ -1,15 +1,15 @@
 //
-//	RootViewController.m
+//	JDRootViewController.m
 //	Jotdown
 //
 //	Created by Geoff Pado on 4/5/10.
 //	Copyright Cocoatype, LLC 2010. All rights reserved.
 //
 
-#import "RootViewController.h"
-#import "DetailViewController.h"
+#import "JDFilesViewController.h"
+#import "JDDetailViewController.h"
 
-@implementation RootViewController
+@implementation JDFilesViewController
 
 @synthesize detailViewController;
 

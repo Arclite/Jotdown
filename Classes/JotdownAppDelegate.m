@@ -8,8 +8,8 @@
 
 #import "JotdownAppDelegate.h"
 
-#import "RootViewController.h"
-#import "DetailViewController.h"
+#import "JDFilesViewController.h"
+#import "JDDetailViewController.h"
 
 @implementation JotdownAppDelegate
 

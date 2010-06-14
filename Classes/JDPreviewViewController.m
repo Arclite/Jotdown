@@ -1,15 +1,15 @@
 //
-//  PreviewViewController.m
+//  JDPreviewViewController.m
 //  Jotdown
 //
 //  Created by Geoff Pado on 4/15/10.
 //  Copyright 2010 Cocoatype, LLC. All rights reserved.
 //
 
-#import "PreviewViewController.h"
+#import "JDPreviewViewController.h"
 #import "JotdownAppDelegate.h"
 
-@implementation PreviewViewController
+@implementation JDPreviewViewController
 
 - (void)viewDidLoad
 {
