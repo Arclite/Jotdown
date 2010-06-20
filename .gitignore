@@ -1,3 +1,5 @@
 build/
 Jotdown.xcodeproj/*.mode1v3
 Jotdown.xcodeproj/*.pbxuser
+Jotdown.xcodeproj/xcuserdata
+Jotdown.xcodeproj/project.xcworkspace

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "JDFilesViewController.h";
-#import "JDDetailViewController.h";
+#import "JDFilesViewController.h"
+#import "JDDetailViewController.h"
 
 @interface JotdownAppDelegate : NSObject <UIApplicationDelegate>
 {

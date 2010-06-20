@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "JDDetailViewController.h";
+#import "JDDetailViewController.h"
 
 @interface JDFilesViewController : UITableViewController
 {
