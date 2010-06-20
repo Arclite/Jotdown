@@ -162,7 +162,7 @@
 	markdown(markdownDoc, previewFile, 0);
 	fclose(previewFile);
 
-	JDPreviewViewController *previewController = [[JDPreviewViewController alloc] initWithNibName:@"PreviewViewController" bundle:nil];
+	JDPreviewViewController *previewController = [[JDPreviewViewController alloc] initWithNibName:@"JDPreviewViewController" bundle:nil];
 	[previewController setModalPresentationStyle:UIModalPresentationPageSheet];
 	[[self splitViewController] presentModalViewController:previewController animated:YES];
 
