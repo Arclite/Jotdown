@@ -10,6 +10,7 @@
 
 @implementation NSString (MaxIndex)
 
+//"safe" version of -substringToIndex: that won't throw an NSRangeException
 - (NSString *)substringToMaxIndex:(NSUInteger)anIndex
 {
 	if ([self length] < anIndex)

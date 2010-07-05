@@ -15,17 +15,20 @@
 {
     [super viewDidLoad];
 
+	//load the preview file created by Discount
 	NSString *previewPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"preview.html"];
 	[webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:previewPath]]];
 }
 
 - (IBAction)dismissSelf:(id)sender
 {
+	//close the preview sheet
 	[[self parentViewController] dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)savePreview:(id)sender
 {
+	//export the current document
 	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] exportMarkdown];
 	[[self parentViewController] dismissModalViewControllerAnimated:YES];
 }
@@ -38,6 +41,8 @@
 - (void)viewDidUnload
 {
 	[super viewDidUnload];
+
+	//trash the preview document
 	NSString *previewPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"preview.html"];
 	[[NSFileManager defaultManager] removeItemAtPath:previewPath error:nil];
 }
