@@ -2,10 +2,6 @@ Jotdown
 =======
 Jotdown is a Markdown editor for the Apple iPad. Working on it, what little I can.
 
-Known bugs
-----------
-- The UI doesn't update as much as I'd like.
-
 Feature List
 ------------
 - More keyboard support
