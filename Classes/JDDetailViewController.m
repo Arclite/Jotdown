@@ -274,6 +274,14 @@
 }
 
 #pragma mark -
+#pragma mark Delegate Methods
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] reloadSelectedDocumentTitle];
+}
+
+#pragma mark -
 #pragma mark Memory management
 
 - (void)dealloc

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "JDFilesViewController.h"
-#import "JDDetailViewController.h"
+@class JDFilesViewController;
+@class JDDetailViewController;
 
 @interface JotdownAppDelegate : NSObject <UIApplicationDelegate>
 {
@@ -27,6 +27,7 @@
 @property (nonatomic, retain) IBOutlet JDDetailViewController *detailViewController;
 
 - (void)reloadTitles;
+- (void)reloadSelectedDocumentTitle;
 - (void)exportMarkdown;
 
 @end

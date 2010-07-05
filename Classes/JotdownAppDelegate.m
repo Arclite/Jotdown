@@ -31,6 +31,11 @@
 	[rootViewController loadDocumentTitles];
 }
 
+- (void)reloadSelectedDocumentTitle
+{
+	[rootViewController reloadSelectedTitle];
+}
+
 - (void)exportMarkdown
 {
 	[detailViewController exportMarkdown];

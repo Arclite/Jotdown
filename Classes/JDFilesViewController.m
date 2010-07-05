@@ -7,6 +7,7 @@
 //
 
 #import "JDFilesViewController.h"
+
 #import "JDDetailViewController.h"
 
 @implementation JDFilesViewController
@@ -48,6 +49,12 @@
 	[[self tableView] reloadData];
 }
 
+- (void)reloadSelectedTitle
+{
+	NSIndexPath *selectedRowIndex = [[self tableView] indexPathForSelectedRow];
+	[[self tableView] reloadRowsAtIndexPaths:[NSArray arrayWithObject:selectedRowIndex] withRowAnimation:UITableViewRowAnimationNone];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView
 {
 	return 1;
@@ -68,7 +75,11 @@
 		[cell setAccessoryType:UITableViewCellAccessoryNone];
 	}
 
-	[[cell textLabel] setText:[[documentPaths objectAtIndex:indexPath.row] objectForKey:@"title"]];
+	if ([indexPath isEqual:[tableView indexPathForSelectedRow]])
+		[[cell textLabel] setText:[detailViewController title]];
+	else
+		[[cell textLabel] setText:[[documentPaths objectAtIndex:indexPath.row] objectForKey:@"title"]];
+
 	return cell;
 }
 

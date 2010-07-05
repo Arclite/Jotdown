@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "JDDetailViewController.h"
+@class JDDetailViewController;
 
 @interface JDFilesViewController : UITableViewController
 {
@@ -19,5 +19,6 @@
 @property (nonatomic, retain) IBOutlet JDDetailViewController *detailViewController;
 
 - (void)loadDocumentTitles;
+- (void)reloadSelectedTitle;
 
 @end
