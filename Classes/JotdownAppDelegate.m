@@ -36,9 +36,9 @@
 	[rootViewController reloadSelectedTitle];
 }
 
-- (void)exportMarkdown
+- (void)exportDocument
 {
-	[detailViewController exportMarkdown];
+	[detailViewController exportHTML];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

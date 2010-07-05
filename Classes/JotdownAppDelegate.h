@@ -28,6 +28,6 @@
 
 - (void)reloadTitles;
 - (void)reloadSelectedDocumentTitle;
-- (void)exportMarkdown;
+- (void)exportDocument;
 
 @end

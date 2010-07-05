@@ -29,7 +29,7 @@
 - (IBAction)savePreview:(id)sender
 {
 	//export the current document
-	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] exportMarkdown];
+	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] exportDocument];
 	[[self parentViewController] dismissModalViewControllerAnimated:YES];
 }
 
