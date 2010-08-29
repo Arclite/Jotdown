@@ -24,7 +24,10 @@
 {
 	[window addSubview:splitViewController.view];
 	[window makeKeyAndVisible];
-	
+
+	//load all the document titles
+	[self reloadTitles];
+
 	//load the document at the top of the list
 	[detailViewController setFilePath:[[documentPaths objectAtIndex:0] objectForKey:@"path"]];
 
@@ -45,6 +48,8 @@
 	//otherwise, sort the documents according to creation date
 	else
 		[documentPaths sortUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:NO]]];
+	
+	[rootViewController reloadData];
 }
 
 - (void)reloadSelectedDocumentTitle

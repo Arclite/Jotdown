@@ -20,13 +20,13 @@
 	[super viewDidLoad];
 	[self setClearsSelectionOnViewWillAppear:NO];
 	[self setContentSizeForViewInPopover:CGSizeMake(320.0f, 600.0f)];
-
-	//fill our table view with the document titles
-	[self loadDocumentTitles];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+	//make sure we have the most recent data
+	[self reloadData];
+
 	//select the row for the current selected document
 	JotdownAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
 	[[self tableView] selectRowAtIndexPath:[NSIndexPath indexPathForRow:[appDelegate selectedDocumentIndex] inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -37,12 +37,9 @@
 	return YES;
 }
 
-- (void)loadDocumentTitles
+- (void)reloadData
 {
-	//tell the app delegate to load the titles
-	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] reloadTitles];
-
-	//reload the table view so all the titles show up
+	//refresh the data in the table view
 	[[self tableView] reloadData];
 }
 

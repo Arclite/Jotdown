@@ -17,7 +17,7 @@
 
 @property (nonatomic, retain) IBOutlet JDDetailViewController *detailViewController;
 
-- (void)loadDocumentTitles;
+- (void)reloadData;
 - (void)reloadSelectedTitle;
 
 @end
