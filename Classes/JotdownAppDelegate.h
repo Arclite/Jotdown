@@ -19,12 +19,17 @@
 
 	JDFilesViewController *rootViewController;
 	JDDetailViewController *detailViewController;
+
+	NSMutableArray *documentPaths;
+	NSUInteger selectedDocumentIndex;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UISplitViewController *splitViewController;
 @property (nonatomic, retain) IBOutlet JDFilesViewController *rootViewController;
 @property (nonatomic, retain) IBOutlet JDDetailViewController *detailViewController;
+@property (nonatomic, retain) NSMutableArray *documentPaths;
+@property (assign) NSUInteger selectedDocumentIndex;
 
 - (void)reloadTitles;
 - (void)reloadSelectedDocumentTitle;

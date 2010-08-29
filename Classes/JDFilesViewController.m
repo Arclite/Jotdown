@@ -8,6 +8,7 @@
 
 #import "JDFilesViewController.h"
 
+#import "JotdownAppDelegate.h"
 #import "JDDetailViewController.h"
 
 @implementation JDFilesViewController
@@ -26,11 +27,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
-
-	//load the document at the top of the list
-	[[self tableView] selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-	[detailViewController setFilePath:[[documentPaths objectAtIndex:0] objectForKey:@"path"]];
+	//select the row for the current selected document
+	JotdownAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+	[[self tableView] selectRowAtIndexPath:[NSIndexPath indexPathForRow:[appDelegate selectedDocumentIndex] inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -40,18 +39,8 @@
 
 - (void)loadDocumentTitles
 {
-	//get the document paths out of the index file
-	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-	NSString *indexPath = [documentsDirectory stringByAppendingPathComponent:@".index"];
-	documentPaths = [[NSArray alloc] initWithContentsOfFile:indexPath];
-
-	//if no documents exist, create a new document
-	if ([documentPaths count] == 0)
-		[detailViewController createNewFile];
-
-	//otherwise, sort the documents according to creation date
-	else
-		[documentPaths sortUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:NO]]];
+	//tell the app delegate to load the titles
+	[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] reloadTitles];
 
 	//reload the table view so all the titles show up
 	[[self tableView] reloadData];
@@ -71,7 +60,8 @@
 
 - (NSInteger)tableView:(UITableView *)aTableView numberOfRowsInSection:(NSInteger)section
 {
-	return [documentPaths count];
+	//return the number of document paths the app delegate knows about
+	return [[(JotdownAppDelegate *)[[UIApplication sharedApplication] delegate] documentPaths] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -89,15 +79,19 @@
 		[[cell textLabel] setText:[detailViewController title]];
 
 	//otherwise, fetch the title out of the index
-	else
-		[[cell textLabel] setText:[[documentPaths objectAtIndex:indexPath.row] objectForKey:@"title"]];
+	else {
+		JotdownAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+		[[cell textLabel] setText:[[[appDelegate documentPaths] objectAtIndex:indexPath.row] objectForKey:@"title"]];
+	}
 
 	return cell;
 }
 
 - (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[detailViewController setFilePath:[[documentPaths objectAtIndex:indexPath.row] objectForKey:@"path"]];
+	JotdownAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+	[appDelegate setSelectedDocumentIndex:indexPath.row];
+	[detailViewController setFilePath:[[[appDelegate documentPaths] objectAtIndex:indexPath.row] objectForKey:@"path"]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -108,8 +102,6 @@
 - (void)dealloc
 {
 	[detailViewController release];
-	[documentPaths release];
-
 	[super dealloc];
 }
 

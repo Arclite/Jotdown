@@ -13,7 +13,6 @@
 @interface JDFilesViewController : UITableViewController
 {
     JDDetailViewController *detailViewController;
-	NSMutableArray *documentPaths;
 }
 
 @property (nonatomic, retain) IBOutlet JDDetailViewController *detailViewController;
