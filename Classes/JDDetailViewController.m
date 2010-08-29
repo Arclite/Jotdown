@@ -62,7 +62,10 @@
 
 	//get index data
 	NSMutableArray *indexArray = [[NSMutableArray alloc] initWithContentsOfFile:indexPath];
-	NSInteger saveIndex = [indexArray indexOfObjectIdenticalTo:[[indexArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"path==%@", [self filePath]]] objectAtIndex:0]];
+	NSArray *objectsWithPath = [indexArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"path==%@", [self filePath]]];
+	if ([objectsWithPath count] == 0)
+		return; //file has been deleted, no need to save
+	NSInteger saveIndex = [indexArray indexOfObjectIdenticalTo:[objectsWithPath objectAtIndex:0]];
 	NSMutableDictionary *indexDictionary = [NSMutableDictionary dictionaryWithDictionary:[indexArray objectAtIndex:saveIndex]];
 
 	//update title

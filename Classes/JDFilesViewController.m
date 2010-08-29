@@ -15,11 +15,17 @@
 
 @synthesize detailViewController;
 
+#pragma mark -
+#pragma mark UI lifecycle
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
 	[self setClearsSelectionOnViewWillAppear:NO];
 	[self setContentSizeForViewInPopover:CGSizeMake(320.0f, 600.0f)];
+
+	//add an edit button to our navigation view
+	[[self navigationItem] setRightBarButtonItem:[self editButtonItem]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -37,6 +43,9 @@
 	return YES;
 }
 
+#pragma mark -
+#pragma mark Title manipulation
+
 - (void)reloadData
 {
 	//refresh the data in the table view
@@ -49,6 +58,9 @@
 	NSIndexPath *selectedRowIndex = [[self tableView] indexPathForSelectedRow];
 	[[self tableView] reloadRowsAtIndexPaths:[NSArray arrayWithObject:selectedRowIndex] withRowAnimation:UITableViewRowAnimationNone];
 }
+
+#pragma mark -
+#pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)aTableView
 {
@@ -90,6 +102,16 @@
 	[appDelegate setSelectedDocumentIndex:indexPath.row];
 	[detailViewController setFilePath:[[[appDelegate documentPaths] objectAtIndex:indexPath.row] objectForKey:@"path"]];
 }
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	JotdownAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+	[appDelegate removeDocumentAtIndex:indexPath.row];
+	[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+}
+
+#pragma mark -
+#pragma mark Memory management
 
 - (void)didReceiveMemoryWarning
 {

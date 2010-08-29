@@ -57,6 +57,21 @@
 	[rootViewController reloadSelectedTitle];
 }
 
+- (void)removeDocumentAtIndex:(NSUInteger)removeIndex
+{
+	NSString *documentPath = [[[self documentPaths] objectAtIndex:removeIndex] objectForKey:@"path"];
+	[[NSFileManager defaultManager] removeItemAtPath:documentPath error:nil];
+	[documentPaths removeObjectAtIndex:removeIndex];
+
+	NSString *documentsDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	NSString *indexPath = [documentsDirectory stringByAppendingPathComponent:@".index"];
+	[[self documentPaths] writeToFile:indexPath atomically:YES];
+
+	if (removeIndex == [self selectedDocumentIndex]) {
+		[detailViewController setFilePath:[[[self documentPaths] objectAtIndex:removeIndex] objectForKey:@"path"]];
+	}
+}
+
 - (void)exportDocument
 {
 	[detailViewController exportHTML];

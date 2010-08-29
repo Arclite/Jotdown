@@ -33,6 +33,7 @@
 
 - (void)reloadTitles;
 - (void)reloadSelectedDocumentTitle;
+- (void)removeDocumentAtIndex:(NSUInteger)removeIndex;
 - (void)exportDocument;
 
 @end
